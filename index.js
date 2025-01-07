@@ -3,19 +3,24 @@ const axios = require("axios");
 const OpenAI = require("openai");
 const mysql = require('mysql2')
 require('dotenv').config()
-
 const app = express();
+app.use(express.json());
 
 const openai = new OpenAI({apiKey:process.env.CHATGPT_APIKEY});
 const LINE_ACCESS_TOKEN = process.env.LINE_ACCESS_TOKEN
 const connection = mysql.createConnection(process.env.DATABASE_URL)
+const PORT = process.env.PORT || 4000;
 
-
-// Middleware สำหรับรับ Webhook จาก LINE
-app.use(express.json());
+// ตรวจสอบสถานะการเชื่อมต่อ
+connection.connect((err) => {
+  if (err) {
+    console.error('Database connection failed:', err.stack);
+    return;
+  }
+  console.log('Connected to database success');
+});
 
 const chatHistory = {};
-
 // Endpoint สำหรับ Webhook
 app.post("/webhook", async (req, res) => {
   const events = req.body.events;
@@ -119,7 +124,6 @@ async function getAIResponse(userMessage,userId) {
 }
 
 // เริ่มเซิร์ฟเวอร์
-const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
