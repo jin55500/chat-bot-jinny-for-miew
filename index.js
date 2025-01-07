@@ -30,10 +30,6 @@ app.post("/webhook", async (req, res) => {
     return res.status(200).send("No events");
   }
 
-  //   if(!events.replyToken){
-  //     return res.status(200).send("No events");
-  //   }
-
   // จัดการ Event
   for (const event of events) {
     if (event.type === "message" && event.message.type === "text") {
@@ -84,7 +80,7 @@ async function handleTextMessage(event) {
         },
       }
     );
-    console.log("Message sent:", replyText);
+    // console.log("Message sent:", replyText);
   } catch (error) {
     console.error(
       "Error sending message:",
@@ -125,5 +121,5 @@ async function getAIResponse(userMessage,userId) {
 
 // เริ่มเซิร์ฟเวอร์
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT} v1.0`);
 });
